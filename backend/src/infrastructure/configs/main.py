@@ -384,6 +384,14 @@ class AppConfig(BaseModel):
         ),
     }
 
+    TEST_BACKGROUND_TASKS: Dict[str, BackgroundTask] = {
+        "test_delete_invalid_file": BackgroundTask(
+            ID="test_delete_invalid_file",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        )
+    }   
+
     MAX_QUERY_SIZE = 10
 
 
