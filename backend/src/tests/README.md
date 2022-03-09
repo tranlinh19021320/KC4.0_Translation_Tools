@@ -6,7 +6,7 @@
 #/backend/src/tests
 ```
 
-### Nơi thêm mới cấu hình cho các background_jobs mới
+### Nơi thêm mới cấu hình cho các background tasks mới
 
 ``` sh
 #/backend/src/infrastructure/configs/main.py#TEST_BACKGROUND_TASKS
