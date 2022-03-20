@@ -389,6 +389,11 @@ class AppConfig(BaseModel):
             ID="test_delete_invalid_file",
             TRIGGER=BackgroundTaskTriggerEnum.interval.value,
             CONFIG=dict(seconds=5, max_instances=1),
+        ),
+         "test_send_transaction_email": BackgroundTask(
+            ID="test_send_transactino_email",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=0, max_instances=1),
         )
     }   
 
