@@ -389,7 +389,47 @@ class AppConfig(BaseModel):
             ID="test_delete_invalid_file",
             TRIGGER=BackgroundTaskTriggerEnum.interval.value,
             CONFIG=dict(seconds=5, max_instances=1),
-        )
+        ),
+        "test_execute_in_batch_detect_by_private_request": BackgroundTask(
+            ID="test_execute_in_batch_detect_by_private_request",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
+        "test_main_function_detect_by_private_request": BackgroundTask(
+            ID="test_main_function_detect_by_private_requestt",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
+        "test_mark_invalid_tasks_detect_by_private_request": BackgroundTask(
+            ID="test_mark_invalid_tasks_detect_by_private_request",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
+        "test_read_task_result_detect_by_private_request": BackgroundTask(
+            ID="test_read_task_result_detect_by_private_request",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
+        "test_execute_in_batch_detect_by_public_request": BackgroundTask(
+            ID="test_execute_in_batch_detect_by_public_request",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
+         "test_main_function_detect_by_public_request": BackgroundTask(
+            ID="test_main_function_detect_by_public_requestt",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
+        "test_mark_invalid_tasks_detect_by_public_request": BackgroundTask(
+            ID="test_mark_invalid_tasks_detect_by_public_request",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
+        "test_read_task_result_detect_by_public_request": BackgroundTask(
+            ID="test_read_task_result_detect_by_public_request",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
     }   
 
     MAX_QUERY_SIZE = 10
