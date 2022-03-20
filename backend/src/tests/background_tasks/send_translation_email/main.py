@@ -1,13 +1,13 @@
 # This module to test async/await
 
 from infrastructure.configs.translation_task import (
-    PLAIN_TEXT_TRANSLATION_TASKS, 
-    FILE_TRANSLATION_TASKS, 
-    TRANSLATION_PRIVATE_TASKS, 
+    PLAIN_TEXT_TRANSLATION_TASKS,
+    FILE_TRANSLATION_TASKS,
+    TRANSLATION_PRIVATE_TASKS,
     TRANSLATION_PUBLIC_TASKS
 )
 from infrastructure.configs.task import (
-    TranslationTaskStepEnum, 
+    TranslationTaskStepEnum,
     StepStatusEnum
 )
 from modules.translation_request.database.translation_request.repository import TranslationRequestRepository
@@ -35,6 +35,16 @@ class AttrDict(dict):
         self.__dict__ = self
 
 
+def create_content_string_for_text(year, month, day, minute, hour):
+    res = f"""
+        Xin chào,
+        
+        Chúng tôi xin gửi bạn kết quả dịch đã được yêu cầu vào {hour} giờ {minute} phút ngày {day}/{month}/{year}.
+        
+        Trân trọng,
+        Nhóm phát triển 
+        """
+    return res
 
 def create_content_string_for_file(year, month, day, minute, hour):
     res = f"""
@@ -61,6 +71,12 @@ async def test_send_translation_email():
 
 
 def mutation(id):
+    """
+    With probability 50%, id is strimmed or change a charactor
+    to create a new id.
+    @param id: type str: The uuid input for mutating.
+    @return: str: the mutated string.
+    """
     if random.random() < 0.5:
         # change length
         strim_len = random.randint(10, len(id) - 1)
@@ -86,6 +102,21 @@ def mutation(id):
 
 
 def add(df, year, month, day, hour, minute, id, translate_content, filename, type, isCrash=False):
+    """
+    Add new record to dataFrame
+    @param df: pd.DataFrame, current DataFrame
+    @param year: int, a number stands for year
+    @param month: int, a number stands for month
+    @param day: int, a number stands for day
+    @param hour: int, a number stands for hour
+    @param minute: int, a number stands for minute
+    @param id: str, string stands for uuid of a document
+    @param translate_content: unnecessary at the moment
+    @param filename: unnecessary at the moment
+    @param type: "file" for read from file, "text" for read from plain text
+    @param isCrash: True if this test should crash, False otherwise
+    @return: df with record added
+    """
     df = df.append({
         'year': year,
         'month': month,
@@ -104,6 +135,12 @@ def add(df, year, month, day, hour, minute, id, translate_content, filename, typ
 
 
 def reformat(df):
+    """
+    Since df auto save number column as float, change to int
+    @param df: pd.DataFrame, current test dataFrame.
+    must has column ["year", "month", "day", "hour", minute"]
+    @return: pd.DataFrame with all number-type columns change to int
+    """
     df['year'] = df['year'].astype(int)
     df['month'] = df['month'].astype(int)
     df['day'] = df['day'].astype(int)
@@ -113,6 +150,15 @@ def reformat(df):
 
 
 def test_generator(candidate_uuid, type):
+    """
+
+    @param candidate_uuid: List[str], uuid for documents in DB
+    @param type: str, ["file", "text"]
+    "file" stands for send_translate_file test
+    "text" stands for send_translate_text test
+    @return: df, pd.DataFrame. Record of all generated test
+    """
+
     df = pd.DataFrame()
 
     # gen correct input test for uuid
@@ -151,7 +197,7 @@ def test_generator(candidate_uuid, type):
     for min in mins:
         df = add(df, 2021, 12, 2, 10, min, candidate_uuid[0], "", "", type, False)
     # gen test complete
-    
+
     # change number columns to int columns
     df = reformat(df)
 
@@ -164,20 +210,20 @@ async def test_send_email_result_for_file_translation():
     print('========== START TEST SEND EMAIL RESULT FILE TRANSLATION =============')
 
     tasks = await translation_request_repository.find_many(
-            params={ 
-                'task_name': { '$in': TRANSLATION_PRIVATE_TASKS + TRANSLATION_PUBLIC_TASKS },
-                'current_step': TranslationTaskStepEnum.translating_language.value,
-                'step_status': {
-                    '$in': [
-                        StepStatusEnum.completed.value
-                    ]
-                },
-                'receiver_email': {
-                    '$ne': None
-                }
+        params={
+            'task_name': { '$in': TRANSLATION_PRIVATE_TASKS + TRANSLATION_PUBLIC_TASKS },
+            'current_step': TranslationTaskStepEnum.translating_language.value,
+            'step_status': {
+                '$in': [
+                    StepStatusEnum.completed.value
+                ]
             },
-            order_by=[('created_at', pymongo.ASCENDING)]
-        )
+            'receiver_email': {
+                '$ne': None
+            }
+        },
+        order_by=[('created_at', pymongo.ASCENDING)]
+    )
 
     print ("Length of current tasks: ", len(tasks))
 
@@ -237,8 +283,8 @@ async def test_send_email_result_for_file_translation():
                 isOK = True
             else:
                 isOK = False
-                df.reason[i] = e         
-            
+                df.reason[i] = e
+
 
         df.result[i] = isOK
 
@@ -247,5 +293,98 @@ async def test_send_email_result_for_file_translation():
     df.to_csv(save_path)
     print('========== DONE TEST SEND EMAIL RESULT FILE TRANSLATION =============')
     print('== Test content and result is logged at: ', save_path)
+
+
+async def test_send_email_result_for_text_translation():
+    print('========== START TEST SEND EMAIL RESULT TEXT TRANSLATION =============')
+
+    tasks = await translation_request_repository.find_many(
+        params={
+            'task_name': { '$in': TRANSLATION_PRIVATE_TASKS + TRANSLATION_PUBLIC_TASKS },
+            'current_step': TranslationTaskStepEnum.translating_language.value,
+            'step_status': {
+                '$in': [
+                    StepStatusEnum.completed.value
+                ]
+            },
+            'receiver_email': {
+                '$ne': None
+            }
+        },
+        order_by=[('created_at', pymongo.ASCENDING)]
+    )
+
+    print ("Length of current tasks: ", len(tasks))
+
+    candidate_uuid_text = []
+
+    for task in tasks:
+        if task.props.task_name in PLAIN_TEXT_TRANSLATION_TASKS:
+            candidate_uuid_text.append(task.id.value)
+
+    df = test_generator(candidate_uuid_text, "text")
+
+    result = pd.DataFrame()
+
+    for i, item in df.iterrows():
+        # create mock task
+
+        task = AttrDict({
+            'created_at': AttrDict({
+                'value': AttrDict({
+                    'year': item['year'],
+                    'month': item['month'],
+                    'day': item['day'],
+                    'minute': item['minute'],
+                    'hour': item['hour']
+                })
+            }),
+            'id': AttrDict({
+                'value': item['id']
+            })
+        })
+
+        # create mock msg
+        msg = EmailMessage()
+
+        msg['Subject'] = f'Kết quả dịch #'
+        msg['To'] = "send@gmail.com"
+        msg['From'] = "receive@gmail.com"
+
+        isOK = True
+
+        try:
+            return_msg = await send_email_result_for_text_translation(task, msg)
+
+            content = get_payload(return_msg, 0, 'utf-8')[:-1]
+            content2 = create_content_string_for_text(item['year'], item['month'], item['day'], item['minute'], item['hour'])
+
+            if content != content2:
+                isOK = False
+                df.reason[i] = "content difference"
+
+            if item['isCrash']:
+                isOK = False
+                df.reason[i] = "not crash"
+        except Exception as e:
+            if item['isCrash']:
+                isOK = True
+            else:
+                isOK = False
+                df.reason[i] = e
+
+
+        df.result[i] = isOK
+
+    save_path = 'src/tests/background_tasks/send_translation_email/tests/test_send_email_result_for_text_translation.csv'
+
+    df.to_csv(save_path)
+    print('========== DONE TEST SEND EMAIL RESULT TEXT TRANSLATION =============')
+    print('== Test content and result is logged at: ', save_path)
+
+
+
+
+
 
 
