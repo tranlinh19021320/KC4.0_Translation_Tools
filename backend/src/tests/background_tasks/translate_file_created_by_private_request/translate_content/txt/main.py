@@ -1,3 +1,5 @@
+from inspect import trace
+from modules.background_tasks.translate_file_created_by_private_request.translate_content.txt.main import *
 from datetime import datetime
 import io
 import pickle
@@ -10,28 +12,31 @@ from uuid import UUID
 import pymongo
 from infrastructure.configs.main import GlobalConfig, get_cnf, get_mongodb_instance
 from infrastructure.configs.task import (
-    TranslationTask_TranslationCompletedResultFileSchemaV1, 
-    TranslationTask_NotYetTranslatedResultFileSchemaV1, 
-    TranslationTaskNameEnum, 
-    TranslationTaskStepEnum, 
+    TranslationTask_TranslationCompletedResultFileSchemaV1,
+    TranslationTask_NotYetTranslatedResultFileSchemaV1,
+    TranslationTaskNameEnum,
+    TranslationTaskStepEnum,
     StepStatusEnum
 )
 
-from infrastructure.adapters.content_translator.main import ContentTranslator 
+from infrastructure.adapters.content_translator.main import ContentTranslator
 
-from modules.translation_request.database.translation_request.repository import TranslationRequestRepository, TranslationRequestEntity
-from modules.translation_request.database.translation_request_result.repository import TranslationRequestResultRepository, TranslationRequestResultEntity
-from modules.translation_request.database.translation_history.repository import TranslationHistoryRepository, TranslationHistoryEntity
+from modules.translation_request.database.translation_request.repository import TranslationRequestRepository, TranslationRequestEntity, TranslationRequestProps
+from modules.translation_request.database.translation_request_result.repository import TranslationRequestResultRepository, TranslationRequestResultEntity, TranslationRequestResultProps
+from modules.translation_request.database.translation_history.repository import TranslationHistoryRepository, TranslationHistoryEntity, TranslationHistoryProps
 from modules.system_setting.database.repository import SystemSettingRepository
 
 import asyncio
 import aiohttp
+
 
 from infrastructure.adapters.logger import Logger
 
 from core.utils.file import get_doc_paragraphs, get_full_path
 from infrastructure.configs.translation_task import RESULT_FILE_STATUS, AllowedFileTranslationExtensionEnum, FileTranslationTask_NotYetTranslatedResultFileSchemaV1, FileTranslationTask_TranslatingResultFileSchemaV1, FileTranslationTask_TranslationCompletedResultFileSchemaV1, get_file_translation_file_path, get_file_translation_target_file_name
 from core.utils.document import check_if_paragraph_has_text, get_common_style
+
+import traceback
 
 config: GlobalConfig = get_cnf()
 db_instance = get_mongodb_instance()
@@ -45,114 +50,103 @@ system_setting_repository = SystemSettingRepository()
 
 contentTranslator = ContentTranslator()
 
-logger = Logger('Task: translate_file_created_by_private_request.translate_content.txt')
+logger = Logger(
+    'Task: translate_file_created_by_private_request.translate_content.txt')
 
-from modules.background_tasks.translate_file_created_by_private_request.translate_content.txt.main import *
+
+class AttrDict(dict):
+    def __init__(self, *args, **kwargs):
+        super(AttrDict, self).__init__(*args, **kwargs)
+        self.__dict__ = self
+
 
 async def test_read_task_result():
-    print('========================================')
+    print('=====================test_read_task_result=====================')
     system_setting = await system_setting_repository.find_one({})
-    
-    ALLOWED_CONCURRENT_REQUEST = system_setting.props.translation_api_allowed_concurrent_req
-    
-    if ALLOWED_CONCURRENT_REQUEST <= 0: return
-    
-    tasks = await translation_request_repository.find_many(
-        params=dict(
-            current_step=TranslationTaskStepEnum.translating_language.value,
-            step_status={
-                '$in': [
-                    StepStatusEnum.not_yet_processed.value,
-                    StepStatusEnum.in_progress.value
-                ]
-            }
-        ),
-        limit=1,
-        order_by=[('created_at', pymongo.ASCENDING)]
-    )
-        
-    if not tasks or not (tasks[0].props.task_name == TranslationTaskNameEnum.private_file_translation.value and \
-        tasks[0].props.current_step == TranslationTaskStepEnum.translating_language.value and \
-        tasks[0].props.file_type == AllowedFileTranslationExtensionEnum.txt.value and \
-        tasks[0].props.step_status in [StepStatusEnum.not_yet_processed.value, StepStatusEnum.in_progress.value]): return
 
-    logger.debug(
-        msg=f'New task translate_file_created_by_private_request.translate_content.txt run in {datetime.now()}'
-    )
-
-    print(f'New task translate_file_created_by_private_request.translate_content.txt run in {datetime.now()}')
-    
     try:
-        tasks = await translation_request_repository.find_many(
-            params=dict(
-                task_name=TranslationTaskNameEnum.private_file_translation.value,
-                current_step=TranslationTaskStepEnum.translating_language.value,
-                step_status={
-                    '$in':[StepStatusEnum.not_yet_processed.value, StepStatusEnum.in_progress.value]
-                },
-                # expired_date={
-                #     "$gt": datetime.now()
-                # }
-            ),
-            limit=ALLOWED_CONCURRENT_REQUEST
-        )
+        from core.value_objects.id import ID
+        from infrastructure.configs.task import CreatorTypeEnum
+        import uuid
 
-        tasks_id = list(map(lambda task: task.id.value, tasks))
+        tasks = []
+        tasks_result = []
+        tasks_history = []
 
-        if len(tasks_id) == 0: 
-            logger.debug(
-                msg=f'An task translate_file_created_by_private_request.translate_content.txt end in {datetime.now()}\n'
+        # Create random tasks
+        for i in range(10):
+            new_request = TranslationRequestEntity(
+                TranslationRequestProps(
+                    creator_id=ID(str(uuid.uuid4())),
+                    creator_type=CreatorTypeEnum.end_user,
+                    task_name=TranslationTaskNameEnum.private_file_translation,
+                    step_status=StepStatusEnum.not_yet_processed.value,
+                    current_step=TranslationTaskStepEnum.translating_language.value,
+                )
             )
-            print(f'An task translate_file_created_by_private_request.translate_content.txt end in {datetime.now()}\n')
-            return
+
+            new_task_result_entity = TranslationRequestResultEntity(
+                TranslationRequestResultProps(
+                    task_id=new_request.id,
+                    step=new_request.props.current_step
+                )
+            )
+
+            new_translation_history_entity = TranslationHistoryEntity(
+                TranslationHistoryProps(
+                    creator_id=new_request.props.creator_id,
+                    task_id=new_request.id,
+                    translation_type=TranslationTaskNameEnum.private_file_translation,
+                    status=TranslationHistoryStatus.translating.value,
+                    file_path=new_task_result_entity.props.file_path
+                )
+            )
+
+            tasks.append(new_request)
+            tasks_result.append(new_task_result_entity)
+            tasks_history.append(new_translation_history_entity)
 
         tasks_result_and_trans_history_req = [
-            translation_request_result_repository.find_many(
-                params=dict(
-                    task_id={
-                        '$in': list(map(lambda t: UUID(t), tasks_id))
-                    },
-                    step=TranslationTaskStepEnum.translating_language.value
-                )
-            ),
-            transation_history_repository.find_many(
-                params=dict(
-                    task_id={
-                        '$in': list(map(lambda t: UUID(t), tasks_id))
-                    }
-                )
-            )
+            tasks_result,
+            tasks_history
         ]
 
         tasks_result, translations_history = await asyncio.gather(*tasks_result_and_trans_history_req)
 
         valid_tasks_mapper, invalid_tasks_mapper = await read_task_result(
-            tasks=tasks, 
+            tasks=tasks,
             tasks_result=tasks_result,
             translations_history=translations_history
         )
 
-        await mark_invalid_tasks(invalid_tasks_mapper)
+        valid_tasks_id = list(map(lambda t: t, list(valid_tasks_mapper)))
+        chunked_tasks_id = list(chunk_arr(valid_tasks_id, 1))
 
-    except Exception as e:
-        logger.error(e)
-        
-        print(e)
+        print('Test run successfully!')
 
-    logger.debug(
-        msg=f'An task translate_file_created_by_private_request.translate_content.txt end in {datetime.now()}\n'
-    )
+        return (valid_tasks_mapper, invalid_tasks_mapper, chunked_tasks_id)
 
-    print(f'An task translate_file_created_by_private_request.translate_content.txt end in {datetime.now()}\n')
+    except:
+        traceback.print_exc()
+        print('Test failed!')
+
+    print(
+        f'An task translate_file_created_by_private_request.translate_content.txt end in {datetime.now()}\n')
+
 
 async def test_mark_invalid_tasks():
-    print('========================================')
-    mark_invalid_tasks()
+    print('=====================test_mark_invalid_tasks=====================')
+    (_, invalid_tasks_mapper, _) = await test_read_task_result()
+    mark_invalid_tasks(invalid_tasks_mapper)
+
 
 async def test_execute_in_batch():
-    print('========================================')
-    execute_in_batch()
+    print('=====================test_execute_in_batch=====================')
+    (valid_tasks_mapper, _, chunked_tasks_id) = await test_read_task_result()
+    for chunk in chunked_tasks_id:
+        await execute_in_batch(valid_tasks_mapper, chunk, 1)
+
 
 async def test_main():
     print('========================================')
-    main()
+    # main()
