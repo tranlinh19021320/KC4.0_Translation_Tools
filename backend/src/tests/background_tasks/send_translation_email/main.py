@@ -15,6 +15,7 @@ from modules.system_setting.database.repository import SystemSettingRepository
 
 from modules.background_tasks.send_translation_email.main import send_email_result_for_file_translation
 from modules.background_tasks.send_translation_email.main import send_email_result_for_text_translation
+from modules.background_tasks.send_translation_email.main import main
 from email.message import EmailMessage
 import pandas as pd
 import random
@@ -383,8 +384,13 @@ async def test_send_email_result_for_text_translation():
     print('== Test content and result is logged at: ', save_path)
 
 
-
-
-
+async def test_main():
+    print('========== START TEST SEND TRANSLATION EMAIL - MAIN =============')
+    try:
+        main()
+        print("Main run without crash!")
+    except Exception as e:
+        print("False, Main crash!")
+    print('=========== DONE TEST SEND TRANSLATION EMAIL - MAIN =============')
 
 
