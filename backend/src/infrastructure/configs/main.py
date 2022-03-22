@@ -389,8 +389,16 @@ class AppConfig(BaseModel):
             ID="test_delete_invalid_file",
             TRIGGER=BackgroundTaskTriggerEnum.interval.value,
             CONFIG=dict(seconds=5, max_instances=1),
+        ),
+
+        "test_translate_plain_text_created_by_private_request.translate_content": BackgroundTask(
+            ID="translate_plain_text_created_by_private_request.translate_content",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
         )
-    }   
+    }  
+
+   
 
     MAX_QUERY_SIZE = 10
 
