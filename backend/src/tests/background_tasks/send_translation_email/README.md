@@ -75,3 +75,15 @@ Connection unexpectedly closed
 ```
 
 Các hàm còn lại không tìm thấy bug.
+
+### UPDATE 1
+
+Cách để kiểm thử hàm main.
+1. Sử dụng Robo 3T hoặc một công cụ trực quan cơ sở dữ liệu, ở thanh định vị bên trái, vào translation-tool > Collections > system_setting, thay đổi giá trị của ```email_for_sending_email``` và ```email_password_for_sending_email``` bằng một tài khoản email có thể sử dụng (hãy sử dụng một tài khoản rác) và lưu lại.
+2. Vào ```https://myaccount.google.com/security```, tìm kiểm ```Quyền truy cập của ứng dụng kém an toàn```, bật chức năng này.
+3. Tìm kiếm ```IMAP enable gmail``` trên trình duyệt, làm theo chỉ dẫn của Microsoft.
+
+Thực hiện tạo test mock như đã hướng dân phần ```Đối với hàm main```.
+
+**KẾT QUẢ**
+Giá trị của ```total_email_sent``` tăng lên 1. Chứng tỏ hàm main đã thực hiện đúng chức năng.

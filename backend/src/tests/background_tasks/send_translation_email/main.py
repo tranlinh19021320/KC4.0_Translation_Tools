@@ -387,7 +387,7 @@ async def test_send_email_result_for_text_translation():
 async def test_main():
     print('========== START TEST SEND TRANSLATION EMAIL - MAIN =============')
     try:
-        main()
+        await main()
         print("Main run without crash!")
     except Exception as e:
         print("False, Main crash!")
