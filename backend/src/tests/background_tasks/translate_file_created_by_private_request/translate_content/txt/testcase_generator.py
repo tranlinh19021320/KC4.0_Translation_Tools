@@ -130,6 +130,12 @@ def create_normal_tests():
     tests.append("ការបៀតបៀននៅសាលាគឺអាក្រក់សម្រាប់មនុស្សគ្រប់គ្នា លើកលែងតែខ្ញុំ។ យើង​នឹង​ចេញ​ក្នុង​រយៈ​ពេល​ដប់​នាទី មិន​ថា​អ្នក​ស្លៀកពាក់​ឬ​អត់។ ក្មេងស្រីពាក់សក់របស់នាងជាខ្ចោពីរ ចងដោយធ្នូពណ៌ខៀវពីរ។")
     tests.append(
         "学校里的恶霸对除了我以外的所有人都很刻薄。 不管你穿好不穿，我们十分钟后离开。 这个女孩把头发编成两条辫子，用两个蓝色蝴蝶结系着。")
+    tests.append("Today I dressed my unicorn in preparation for the race. For some unfathomable reason, the response team didn't consider a lack of milk for my cereal as a proper emergency. The changing of down comforters to cotton bedspreads always meant the squirrels had returned.")
+    tests.append("Hoy vestí a mi unicornio en preparación para la carrera.\n\tPor alguna razón insondable, el equipo de respuesta no consideró la falta de leche para mi cereal como una emergencia adecuada.\n\tEl cambio de edredones de plumas por cubrecamas de algodón siempre significaba que las ardillas habían regresado.")
+    tests.append("Өнөөдөр би уралдааны бэлтгэлд зориулж ганц эвэртээ өмсөв.\n\tЯмар нэг ойлгомжгүй шалтгааны улмаас хариу арга хэмжээ авах баг миний үр тарианы сүү дутагдаж байгааг яаралтай тусламж гэж үзээгүй.\n\tХөвөн даавуун орны даавуугаар хөнжил сольсон нь хэрэм буцаж ирсэн гэсэн үг.")
+    tests.append("Aujourd'hui j'ai habillé ma licorne en préparation de la course. Pour une raison insondable, l'équipe d'intervention n'a pas considéré le manque de lait pour mes céréales comme une véritable urgence.\n\tLe remplacement des couettes en duvet par des couvre-lits en coton signifiait toujours le retour des écureuils.")
+    tests.append("ថ្ងៃនេះ ខ្ញុំបានស្លៀកពាក់ unicorn របស់ខ្ញុំ ដើម្បីត្រៀមខ្លួនសម្រាប់ការប្រណាំង។ សម្រាប់ហេតុផលដែលមិនអាចយល់បាន ក្រុមការងារឆ្លើយតបមិនបានចាត់ទុកការខ្វះទឹកដោះគោសម្រាប់ធញ្ញជាតិរបស់ខ្ញុំថាជាគ្រាអាសន្នត្រឹមត្រូវ។ ការ​ផ្លាស់​ប្តូរ​ភួយ​មក​ជា​ក្រណាត់​កប្បាស​តែងតែ​មាន​ន័យ​ថា​សត្វ​កំប្រុក​បាន​វិល​មក​វិញ។")
+    tests.append("ມື້​ນີ້​ຂ້າ​ພະ​ເຈົ້າ​ນຸ່ງ unicorn ຂອງ​ຂ້າ​ພະ​ເຈົ້າ​ໃນ​ການ​ກະ​ກຽມ​ສໍາ​ລັບ​ການ​ແຂ່ງ​ຂັນ​. ສໍາລັບເຫດຜົນທີ່ບໍ່ເຂົ້າໃຈໄດ້ບາງອັນ, ທີມງານຕອບສະຫນອງບໍ່ໄດ້ພິຈາລະນາການຂາດນ້ໍານົມສໍາລັບຫານປະເພດເມັດຂອງຂ້ອຍເປັນເຫດສຸກເສີນທີ່ເຫມາະສົມ. ການປ່ຽນຜ້າປູບ່ອນນອນເປັນຜ້າປູທີ່ນອນສະເໝີໝາຍຄວາມວ່າກະຮອກໄດ້ກັບຄືນມາ.")
 
     # Write test to file
     for i in range(len(tests)):
