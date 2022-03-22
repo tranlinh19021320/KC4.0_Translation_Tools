@@ -5,7 +5,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 def init_test_background_tasks(config: GlobalConfig):
     
     from tests.background_tasks.delete_invalid_file import add_fresh_jobs as add_fresh_jobs_1
-    from tests.background_tasks.translate_plain_text_created_by_private_request import add_fresh_jobs as add_fresh_jobs_2
+    from tests.background_tasks.translate_plain_text_created_by_private_request import add_fresh_jobs as add_fresh_jobs_7
 
     BACKGROUND_TASKS = config.APP_CONFIG.TEST_BACKGROUND_TASKS
 
