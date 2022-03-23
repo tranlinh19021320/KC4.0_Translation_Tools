@@ -37,14 +37,11 @@ def test_get_to_be_deleted_file_path():
     print("Test_get_to_be_deleted_file_path test case 4: ", get_to_be_deleted_file_path(["/usr/bin/go__what.txt"]) == (["task_result/usr/bin/go__what.txt"], ["file_translation/what/"], ["file_language_detection/what/"]))
     
 
-# async def test_main():
-#     print('========== REAL TEST MAIN ==========')
-#     try:
-#         await main()
-#         print("WORK FINE!")
-#     except Exception as e:
-#         print("CRASH!")
-
 async def test_main():
-    print("========== FAKE TEST MAIN ==========")
+    print('========== REAL TEST MAIN ==========')
+    try:
+        await main()
+        print("WORK FINE!")
+    except Exception as e:
+        print("CRASH!")
     
