@@ -1,4 +1,3 @@
-from numpy import fromiter
 from infrastructure.configs.main import GlobalConfig
 from infrastructure.adapters.background_task_manager.main import BackgroundTaskManager
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
