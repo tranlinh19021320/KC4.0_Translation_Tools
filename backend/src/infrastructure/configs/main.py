@@ -385,10 +385,25 @@ class AppConfig(BaseModel):
     }
 
     TEST_BACKGROUND_TASKS: Dict[str, BackgroundTask] = {
-        "test_delete_invalid_file": BackgroundTask(
-            ID="test_delete_invalid_file",
+        "test_get_task_id_from_task_result_file_path": BackgroundTask(
+            ID="test_get_task_id_from_task_result_file_path",
             TRIGGER=BackgroundTaskTriggerEnum.interval.value,
-            CONFIG=dict(seconds=5, max_instances=1),
+            CONFIG=dict(seconds=0, max_instances=1),
+        ),
+        "test_get_file_created_time": BackgroundTask(
+            ID="test_get_file_created_time",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=0, max_instances=1),
+        ),
+        "test_main": BackgroundTask(
+            ID="test_main",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=0, max_instances=1),
+        ),
+        "test_get_to_be_deleted_file_path": BackgroundTask(
+            ID="test_get_to_be_deleted_file_path",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=0, max_instances=1),
         )
     }   
 
