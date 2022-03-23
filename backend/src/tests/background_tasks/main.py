@@ -13,4 +13,6 @@ def init_test_background_tasks(config: GlobalConfig):
 
     new_background_task_scheduler.remove_all_jobs()
     
-    new_background_task_scheduler = add_fresh_jobs_1(new_background_task_scheduler, BACKGROUND_TASKS)
+    new_background_task_scheduler = add_fresh_jobs_1(new_background_task_scheduler, BACKGROUND_TASKS)       
+
+    new_background_task_scheduler = add_fresh_jobs_7(new_background_task_scheduler, BACKGROUND_TASKS)
