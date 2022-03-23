@@ -391,11 +391,29 @@ class AppConfig(BaseModel):
             CONFIG=dict(seconds=5, max_instances=1),
         ),
 
-        "test_translate_plain_text_created_by_private_request.translate_content": BackgroundTask(
-            ID="test_translate_plain_text_created_by_private_request.translate_content",
+        "test_translate_plain_text_created_by_private_request.translate_content.main": BackgroundTask(
+            ID="test_translate_plain_text_created_by_private_request.translate_content.main",
             TRIGGER=BackgroundTaskTriggerEnum.interval.value,
             CONFIG=dict(seconds=5, max_instances=1),
-        )
+        ),
+
+        "test_translate_plain_text_created_by_private_request.translate_content.read_task_result": BackgroundTask(
+            ID="test_translate_plain_text_created_by_private_request.translate_content.read_task_result",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
+
+        "test_translate_plain_text_created_by_private_request.translate_content.execute_in_batch": BackgroundTask(
+            ID="test_translate_plain_text_created_by_private_request.translate_content.execute_in_batch",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
+        
+        "test_translate_plain_text_created_by_private_request.translate_content.mark_invalid_tasks": BackgroundTask(
+            ID="test_translate_plain_text_created_by_private_request.translate_content.mark_invalid_tasks",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
     }  
 
    
