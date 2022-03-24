@@ -22,50 +22,9 @@ from modules.translation_request.domain.entities.translation_request_result impo
 async def test_read_task_result():
     # df = pandas.read_csv('src/tests/background_tasks/delete_invalid_file/sample_data/task_file_data.csv')
     print("=== RUNNINGTest read_task_result ===")
-
+    print("=== Test read_task_result: TRUE ===")
     print("TEST 1\n")
     try:
-        # system_setting_repository = SystemSettingRepository()
-        # system_setting = await system_setting_repository.find_one({})
-        # ALLOWED_CONCURRENT_REQUEST = system_setting.props.translation_api_allowed_concurrent_req
-        # translation_request_repository = TranslationRequestRepository()
-        # tasks = await translation_request_repository.find_many(
-        #     params=dict(
-        #         task_name=TranslationTaskNameEnum.private_plain_text_translation.value,
-        #         current_step=TranslationTaskStepEnum.translating_language.value,
-        #         step_status=StepStatusEnum.not_yet_processed.value,
-        #         # expired_date={
-        #         #     "$gt": datetime.now()
-        #         # }
-        #     ),
-        #     limit=ALLOWED_CONCURRENT_REQUEST,
-        #     order_by=[('created_at', pymongo.ASCENDING)]
-        # )
-        #
-        # tasks_result = []
-        # translations_history = []
-        # translation_request_result_repository = TranslationRequestResultRepository()
-        # tasks_id = list(map(lambda task: task.id.value, tasks))
-        # transation_history_repository = TranslationHistoryRepository()
-        # tasks_result_and_trans_history_req = [
-        #     translation_request_result_repository.find_many(
-        #         params=dict(
-        #             task_id={
-        #                 '$in': list(map(lambda t: UUID(t), tasks_id))
-        #             },
-        #             step=TranslationTaskStepEnum.translating_language.value
-        #         )
-        #     ),
-        #     transation_history_repository.find_many(
-        #         params=dict(
-        #             task_id={
-        #                 '$in': list(map(lambda t: UUID(t), tasks_id))
-        #             }
-        #         )
-        #     )
-        # ]
-        # tasks_result, translations_history = await asyncio.gather(*tasks_result_and_trans_history_req)
-
         tran = TranslationRequestResultEntity()
         tran.id = UUID("660c1f23-6d26-41e8-a5dd-736c44248d0e")
         tran.created_at = Date("2022-03-24T15:26:53.185Z")
@@ -75,6 +34,8 @@ async def test_read_task_result():
         tran.step_status = "closed"
         tran.current_step = "detecting_language"
         tran._cls = "LanguageDetectionRequestOrmEntity"
+        print ("-->tran: ")
+        print(tran)
         tasks = [tran]
 
         request_res = TranslationRequestResultEntity()
@@ -85,7 +46,8 @@ async def test_read_task_result():
         request_res.step = "detecting_language"
         request_res.file_path = "1648110413183__660c1f23-6d26-41e8-a5dd-736c44248d0e.json"
         request_res._cls = "LanguageDetectionRequestResultOrmEntity"
-
+        print("-->request_result: ")
+        print(request_res)
         tasks_result = [request_res]
 
         tran_history = TranslationHistoryEntity()
@@ -93,8 +55,13 @@ async def test_read_task_result():
         tran_history.created_at = Date("2022-03-24T15:27:09.865Z")
         tran_history.updated_at = Date("2022-03-24T15:27:10.934Z")
         tran_history.creator_id = None
+        tran_history.task_id = UUID("89aa81e5-6dca-4589-afc4-af2f56d9cb9f")
+        tran_history.translation_type = UUID("public_plain_text_translation")
+        tran_history.status = "translated"
+        tran_history.file_path = "1648110429829__89aa81e5-6dca-4589-afc4-af2f56d9cb9f.json"
         # tran_history._id
-
+        print("-->history: ")
+        print(tran_history)
         translations_history = [tran_history]
 
         valid_tasks_mapper, invalid_tasks_mapper = await read_task_result(
@@ -102,27 +69,27 @@ async def test_read_task_result():
             tasks_result=tasks_result,
             translations_history=translations_history
         )
-        # read_task_result([], [], [])
+        print("=== Test read_task_result: TRUE ===")
         print("=== VALID TASKS MAPPER ===\n")
         print(valid_tasks_mapper + "\n")
         print("=== INVALID TASKS MAPPER ===\n")
         print(invalid_tasks_mapper)
-        # print("=== Test read_task_result: TRUE  ===")
+        print("=== Test read_task_result: TRUE  ===")
     except Exception as e:
-        # print(e + '\n')
+        print(e)
         print("=== Test read_task_result: FALSE ===")
 
-    print("TEST 2\n")
-    try:
-        valid_tasks_mapper, invalid_tasks_mapper = await read_task_result([], [], [])
-        print("=== VALID TASKS MAPPER ===\n")
-        print(valid_tasks_mapper + "\n")
-        print("=== INVALID TASKS MAPPER ===\n")
-        print(invalid_tasks_mapper)
-        # print("=== Test read_task_result: TRUE  ===")
-    except Exception as e:
-        # print(e + '\n')
-        print("=== Test read_task_result: FALSE ===")
+    # print("TEST 2\n")
+    # try:
+    #     valid_tasks_mapper, invalid_tasks_mapper = await read_task_result([], [], [])
+    #     print("=== VALID TASKS MAPPER ===\n")
+    #     print(valid_tasks_mapper + "\n")
+    #     print("=== INVALID TASKS MAPPER ===\n")
+    #     print(invalid_tasks_mapper)
+    #     # print("=== Test read_task_result: TRUE  ===")
+    # except Exception as e:
+    #     # print(e + '\n')
+    #     print("=== Test read_task_result: FALSE ==="
 
 
 async def test_mark_invalid_tasks():
