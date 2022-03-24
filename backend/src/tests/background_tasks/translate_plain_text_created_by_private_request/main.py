@@ -7,16 +7,19 @@ import pandas
 from tqdm import asyncio
 from umongo.frameworks import pymongo
 
+from core import Entity
 from infrastructure.configs.task import StepStatusEnum
 from infrastructure.configs.translation_task import TranslationTaskNameEnum, TranslationTaskStepEnum
 from modules.background_tasks.translate_plain_text_created_by_private_request.translate_content.main import (
     read_task_result, mark_invalid_tasks, execute_in_batch, main)
 from modules.system_setting.database.repository import SystemSettingRepository
+from modules.task.domain.entities.task_result import TaskResultEntity, TaskResultProps
 from modules.translation_request.database.translation_history.repository import TranslationHistoryRepository
 from modules.translation_request.database.translation_request.repository import TranslationRequestRepository
 from modules.translation_request.database.translation_request_result import TranslationRequestResultRepository
 from modules.translation_request.domain.entities.translation_history import TranslationHistoryEntity
-from modules.translation_request.domain.entities.translation_request_result import TranslationRequestResultEntity
+from modules.translation_request.domain.entities.translation_request_result import TranslationRequestResultEntity, \
+    TranslationRequestResultProps
 
 
 async def test_read_task_result():
@@ -25,8 +28,12 @@ async def test_read_task_result():
     print("=== Test read_task_result: TRUE ===")
     print("TEST 1\n")
     try:
+        print("-->tran: ")
         tran = TranslationRequestResultEntity()
+        print("-->tran: ")
         tran.id = UUID("660c1f23-6d26-41e8-a5dd-736c44248d0e")
+        print("-->tran: ")
+
         tran.created_at = Date("2022-03-24T15:26:53.185Z")
         tran.creator_id = None
         tran.task_name = "public_plain_text_language_detection"
@@ -38,7 +45,8 @@ async def test_read_task_result():
         print(tran)
         tasks = [tran]
 
-        request_res = TranslationRequestResultEntity()
+        # task_res_entity = TaskResultEntity(Entity[TaskResultProps])
+        request_res = TranslationRequestResultEntity(TaskResultEntity, Entity[TranslationRequestResultProps])
         request_res._id = UUID("377b5a56-51bd-40e7-8b52-73060e5f8c32")
         request_res.created_at = Date("2022-03-24T15:26:53.428Z")
         request_res.updated_at = Date("2022-03-24T15:26:53.428Z")
