@@ -83,10 +83,10 @@ async def test_read_task_result():
     try:
         valid_tasks_mapper, invalid_tasks_mapper = await read_task_result([], [], [])
         print("=== VALID TASKS MAPPER ===\n")
-        print(valid_tasks_mapper + "\n")
+        print(valid_tasks_mapper)
         print("=== INVALID TASKS MAPPER ===\n")
         print(invalid_tasks_mapper)
-        # print("=== Test read_task_result: TRUE  ===")
+        print("=== Test read_task_result in testcase 2: TRUE  ===")
     except Exception as e:
         print(e)
         print("=== Test read_task_result: FALSE ===")
