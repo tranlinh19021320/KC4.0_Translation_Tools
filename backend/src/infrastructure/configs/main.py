@@ -403,8 +403,13 @@ class AppConfig(BaseModel):
         "test_translate_file_created_by_private_request.translate_content.pptx": BackgroundTask(
             ID="test_translate_file_created_by_private_request.translate_content.pptx",
             TRIGGER=BackgroundTaskTriggerEnum.interval.value,
-            CONFIG=dict(seconds=0, max_instances=1),
+            CONFIG=dict(seconds=0, max_instances=1)
         ),
+        "test_translate_file_created_by_private_request.translate_content.txt": BackgroundTask(
+            ID="test_translate_file_created_by_private_request.translate_content.txt",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=0, max_instances=1),
+        )
     }   
 
     MAX_QUERY_SIZE = 10
