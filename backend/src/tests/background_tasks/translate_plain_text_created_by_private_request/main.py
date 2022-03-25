@@ -3,16 +3,20 @@ from datetime import datetime
 from sqlite3 import Date
 from typing import Union
 from uuid import UUID
+from core.utils.common import chunk_arr
 
 from nltk import data
+from typing import List
 
 from core.value_objects.id import ID
 
 import pandas
+import json
 from tqdm import asyncio
 from umongo.frameworks import pymongo
 
 from core import Entity
+
 from infrastructure.configs.task import StepStatusEnum, CreatorTypeEnum
 from infrastructure.configs.translation_history import TranslationHistoryStatus
 from infrastructure.configs.translation_task import TranslationTaskNameEnum, TranslationTaskStepEnum
@@ -32,9 +36,13 @@ from modules.translation_request.domain.entities.translation_request import Tran
 from modules.translation_request.domain.entities.translation_request_result import TranslationRequestResultEntity, \
     TranslationRequestResultProps
 
+translation_request_repository = TranslationRequestRepository()
+translation_request_result_repository = TranslationRequestResultRepository()
+translation_history_repository = TranslationHistoryRepository()
+system_setting_repository = SystemSettingRepository()
+
 
 async def test_read_task_result():
-
 
     # df = pandas.read_csv('src/tests/background_tasks/delete_invalid_file/sample_data/task_file_data.csv')
     print("===>>>>>>> Test read_task_result <<<<<<<<<<<<===")
@@ -128,6 +136,7 @@ async def test_read_task_result():
     except Exception as e:
         print(e)
         print("=== Test read_task_result: FALSE ===")
+
 
 async def test_mark_invalid_tasks():
     print("===>>>>>>> Test mark_invalid_tasks <<<<<<<<<<<<===")
@@ -223,11 +232,47 @@ async def test_mark_invalid_tasks():
 
 
 async def test_execute_in_batch():
-    print("=== Test execute_in_batch ===")
+    print("===>>>>>>> Test execute_in_batch <<<<<<<<<<<<===")
+    from modules.system_setting.database.repository import SystemSettingRepository
+
+    system_setting_repository = SystemSettingRepository()
+    system_setting = await system_setting_repository.find_one({})
+
+    ALLOWED_CONCURRENT_REQUEST = system_setting.props.translation_api_allowed_concurrent_req
+
+    print("TEST 1: ")
+    try:
+        print("INIT ARGUMENT SUCCESS")
+        valid_tasks_mapper = []
+        await execute_in_batch(valid_tasks_mapper, [], ALLOWED_CONCURRENT_REQUEST)
+        print("Test execute_in_batch in testcase 1: TRUE")
+    except Exception as e:
+        print(e)
+        print("Test execute_in_batch in testcase 1: FALSE")
+
+    print("TEST 2: ")
+    try:
+        await execute_in_batch([], [], None)
+        print("Test execute_in_batch in test case 2: TRUE")
+    except Exception as e:
+        print(e)
+        print("Test execute_in_batch in test case 2: FALSE")
+    
+    # try:
+    #     tasks: List[TranslationRequestEntity]
+    #     tasks_result: List[TranslationRequestResultEntity]
+    #     translations_history: List[TranslationHistoryEntity]
+
+        
+    # except Exception as e:
+    #     print(e)
+    #     return
+
 
 
 async def test_main():
     print("=== Test main ===")
+    await main()
     # try:
     #     # main()
     # except Exception as e:
