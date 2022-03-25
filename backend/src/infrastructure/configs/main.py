@@ -390,6 +390,16 @@ class AppConfig(BaseModel):
             TRIGGER=BackgroundTaskTriggerEnum.interval.value,
             CONFIG=dict(seconds=5, max_instances=1),
         ),
+        "test_detect_plain_text_language_created_by_private_request": BackgroundTask(
+            ID="test_detect_plain_text_language_created_by_private_request",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
+        "test_detect_plain_text_language_created_by_public_request": BackgroundTask(
+            ID="test_detect_plain_text_language_created_by_public_request",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=5, max_instances=1),
+        ),
          "test_send_transaction_email": BackgroundTask(
             ID="test_send_transactino_email",
             TRIGGER=BackgroundTaskTriggerEnum.interval.value,
