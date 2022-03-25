@@ -273,8 +273,9 @@ async def test_execute_in_batch():
 async def test_main():
     print("=== Test main ===")
     await main()
-    # try:
-    #     # main()
-    # except Exception as e:
-    #     print(e)
-    #     print('===================FAIL===================')
+    try:
+        await main()
+        print('Test translate_plain_text_created_by_private_request TRUE')
+    except Exception as e:
+        print(e)
+        print('Test translate_plain_text_created_by_private_request FALSE')
