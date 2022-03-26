@@ -5,6 +5,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 def init_test_background_tasks(config: GlobalConfig):
     
     from tests.background_tasks.delete_invalid_file import add_fresh_jobs as add_fresh_jobs_1
+    from tests.background_tasks.translate_plain_text_created_by_private_request import add_fresh_jobs as add_fresh_jobs_7
     from tests.background_tasks.detect_plain_text_language_created_by_private_request import add_fresh_jobs as add_fresh_jobs_2
     from tests.background_tasks.detect_plain_text_language_created_by_public_request import add_fresh_jobs as add_fresh_jobs_3
     from tests.background_tasks.send_translation_email import add_fresh_jobs as add_fresh_jobs_4
@@ -17,6 +18,8 @@ def init_test_background_tasks(config: GlobalConfig):
 
     new_background_task_scheduler.remove_all_jobs()
     
+    new_background_task_scheduler = add_fresh_jobs_1(new_background_task_scheduler, BACKGROUND_TASKS)       
+    new_background_task_scheduler = add_fresh_jobs_7(new_background_task_scheduler, BACKGROUND_TASKS)
     new_background_task_scheduler = add_fresh_jobs_1(new_background_task_scheduler, BACKGROUND_TASKS)
     new_background_task_scheduler = add_fresh_jobs_2(new_background_task_scheduler, BACKGROUND_TASKS)
     new_background_task_scheduler = add_fresh_jobs_3(new_background_task_scheduler, BACKGROUND_TASKS)
