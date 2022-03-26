@@ -404,7 +404,23 @@ class AppConfig(BaseModel):
             ID="test_get_to_be_deleted_file_path",
             TRIGGER=BackgroundTaskTriggerEnum.interval.value,
             CONFIG=dict(seconds=0, max_instances=1),
+        ),
+        "test_get_task_id_from_task_result_file_path_delete_invalid_task": BackgroundTask(
+            ID="test_get_task_id_from_task_result_file_path_delete_invalid_task",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=0, max_instances=1),
+        ),
+        "test_main_delete_invalid_task": BackgroundTask(
+            ID="test_main_delete_invalid_task",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=0, max_instances=1),
+        ),
+        "test_get_to_be_deleted_file_path_delete_invalid_task": BackgroundTask(
+            ID="test_get_to_be_deleted_file_path_delete_invalid_task",
+            TRIGGER=BackgroundTaskTriggerEnum.interval.value,
+            CONFIG=dict(seconds=0, max_instances=1),
         )
+
     }   
 
     MAX_QUERY_SIZE = 10
