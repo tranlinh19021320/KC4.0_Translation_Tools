@@ -62,11 +62,11 @@ async def test_read_task_result():
 
             language_detect_history_entity = LanguageDetectionHistoryEntity(
                 LanguageDetectionHistoryProps(
-                    creator_id= None,
-                    task_id= ID(item['task_id']),
+                    creator_id= ID("76b76d60-2682-4c53-b092-c8262a353dba"),
+                    task_id= ID("76b76d60-2682-4c53-b092-c8262a353dba"),
                     language_detection_type= LanguageDetectionHistoryTypeEnum.public_plain_text_language_detection.value,
                     status= LanguageDetectionHistoryStatus.detecting.value,
-                    file_path= None
+                    file_path= "1648110429829__89aa81e5-6dca-4589-afc4-af2f56d9cb9f.json"
                 )
             )
             language_detection_history = [language_detect_history_entity]
@@ -122,11 +122,11 @@ async def test_mark_invalid_tasks():
 
             language_detect_history_entity = LanguageDetectionHistoryEntity(
                 LanguageDetectionHistoryProps(
-                    creator_id= None,
-                    task_id= ID(item['task_id']),
+                    creator_id= ID("76b76d60-2682-4c53-b092-c8262a353dba"),
+                    task_id= ID("76b76d60-2682-4c53-b092-c8262a353dba"),
                     language_detection_type= LanguageDetectionHistoryTypeEnum.public_plain_text_language_detection.value,
                     status= LanguageDetectionHistoryStatus.detecting.value,
-                    file_path= None
+                    file_path= "1648110429829__89aa81e5-6dca-4589-afc4-af2f56d9cb9f.json"
                 )
             )
             language_detection_history = [language_detect_history_entity]
@@ -184,11 +184,11 @@ async def test_execute_in_batch():
 
             language_detect_history_entity = LanguageDetectionHistoryEntity(
                 LanguageDetectionHistoryProps(
-                    creator_id= None,
-                    task_id= ID(item['task_id']),
+                    creator_id= ID("76b76d60-2682-4c53-b092-c8262a353dba"),
+                    task_id= ID("76b76d60-2682-4c53-b092-c8262a353dba"),
                     language_detection_type= LanguageDetectionHistoryTypeEnum.public_plain_text_language_detection.value,
                     status= LanguageDetectionHistoryStatus.detecting.value,
-                    file_path= None
+                    file_path= "1648110429829__89aa81e5-6dca-4589-afc4-af2f56d9cb9f.json"
                 )
             )
             language_detection_history = [language_detect_history_entity]
